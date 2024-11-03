@@ -48,7 +48,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <JobPanel jobs={jobList} onJobSelect={setSelectedJob} onAddJob={togglePopup} />
+      <JobPanel jobs={jobList} onJobSelect={setSelectedJob} onAddJob={handleAddJob} />
       <div className={`main-content ${isPopupOpen ? 'blur' : ''}`}>
         <SortFilterPanel 
           selectedJob={selectedJob} 

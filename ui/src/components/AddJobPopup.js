@@ -1,4 +1,3 @@
-// AddJobPopup.js
 import React, { useState } from 'react';
 
 const AddJobPopup = ({ onClose, onAddJob }) => {
@@ -8,25 +7,35 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
     { text: "React", important: false },
     { text: "Node.js", important: false },
     { text: "JavaScript", important: false }
-  ]); // Keywords now contain an object for importance
+  ]);
   const [newKeyword, setNewKeyword] = useState('');
   const [isAdvancedOptionsVisible, setIsAdvancedOptionsVisible] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("handleSubmit called");
     if (jobTitle && jobDescription) {
-      if (!isAdvancedOptionsVisible) {
-        setIsAdvancedOptionsVisible(true);
-      } else {
-        onAddJob({ id: Date.now(), title: jobTitle, description: jobDescription });
-        console.log('Adding job:', { title: jobTitle, description: jobDescription, keywords });
-        onClose();
-        setJobTitle('');
-        setJobDescription('');
-        setIsAdvancedOptionsVisible(false);
-      }
+      setIsAdvancedOptionsVisible(true);
     }
   };
+  
+  const handleFinalSubmit = (e) => {
+    e.preventDefault();
+    console.log("handleFinalSubmit called");
+    console.log("onAddJob:", onAddJob);
+    onAddJob({ id: Date.now(), title: jobTitle, description: jobDescription, keywords });
+    onClose();
+    // Reset form fields
+    setJobTitle('');
+    setJobDescription('');
+    setKeywords([
+      { text: "React", important: false },
+      { text: "Node.js", important: false },
+      { text: "JavaScript", important: false }
+    ]);
+    setIsAdvancedOptionsVisible(false);
+  };
+  
 
   const handleAddKeyword = () => {
     if (newKeyword) {
@@ -47,7 +56,6 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
         }
         return keyword;
       });
-      // Sort keywords, moving important ones to the top
       return updatedKeywords.sort((a, b) => b.important - a.important);
     });
   };
@@ -56,7 +64,7 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
     <div className="popup-overlay">
       <div className="popup large-popup">
         <h2>Add Job Listing</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={isAdvancedOptionsVisible ? handleFinalSubmit : handleSubmit}>
           <input 
             type="text" 
             value={jobTitle} 
@@ -71,7 +79,14 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
             required 
             rows="4"
           />
-          <button type="submit">Add Job</button>
+
+          {/* Toggle buttons based on the step */}
+          {!isAdvancedOptionsVisible ? (
+            <button type="submit">Show Advanced Options</button>
+          ) : (
+            <button type="submit">Add Job</button>
+          )}
+
           <button type="button" onClick={onClose}>Cancel</button>
         </form>
 
@@ -91,13 +106,13 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
             </div>
             <p>Manage generated keywords:</p>
             <div className="keyword-list">
-              {keywords.map((keyword, index) => (
-                <div key={index} className="keyword-item">
+              {keywords.map((keyword) => (
+                <div key={keyword.text} className="keyword-item">
                   <span 
                     className={`star-icon ${keyword.important ? 'filled' : ''}`} 
                     onClick={() => toggleImportant(keyword.text)}
                   >
-                    {keyword.important ? '★' : '☆'} {/* Filled star if important */}
+                    {keyword.important ? '★' : '☆'}
                   </span>
                   <span>{keyword.text}</span>
                   <button className="remove-keyword" onClick={() => handleRemoveKeyword(keyword.text)}>×</button>

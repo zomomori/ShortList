@@ -11,13 +11,13 @@ const JobPanel = ({ jobs, onJobSelect, onAddJob }) => {
     onJobSelect(job); // Pass the whole job object
   };
 
-  const togglePopup = () => {
-    setIsPopupOpen(!isPopupOpen);
-  };
+  const openPopup = () => setIsPopupOpen(true);
+  const closePopup = () => setIsPopupOpen(false);
+
 
   return (
     <div className="job-panel">
-      <div className="add-job" onClick={togglePopup}>
+      <div className="add-job" onClick={openPopup}>
         <span className="add-icon">+</span> Add Job Listing
       </div>
       {jobs.map((job) => (
@@ -33,7 +33,7 @@ const JobPanel = ({ jobs, onJobSelect, onAddJob }) => {
         </div>
       ))}
       {isPopupOpen && (
-        <AddJobPopup onClose={togglePopup} onAddJob={onAddJob} />
+        <AddJobPopup onClose={closePopup} onAddJob={onAddJob} />
       )}
     </div>
   );
