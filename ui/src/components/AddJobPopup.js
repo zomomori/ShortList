@@ -3,17 +3,15 @@ import React, { useState } from 'react';
 const AddJobPopup = ({ onClose, onAddJob }) => {
   const [jobTitle, setJobTitle] = useState('');
   const [jobDescription, setJobDescription] = useState('');
-  const [keywords, setKeywords] = useState([
-    { text: "React", important: false },
-    { text: "Node.js", important: false },
-    { text: "JavaScript", important: false }
-  ]);
+  const [keywords, setKeywords] = useState({
+    all: ["React", "Node.js", "JavaScript"],
+    important: []
+  });
   const [newKeyword, setNewKeyword] = useState('');
   const [isAdvancedOptionsVisible, setIsAdvancedOptionsVisible] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("handleSubmit called");
     if (jobTitle && jobDescription) {
       setIsAdvancedOptionsVisible(true);
     }
@@ -21,42 +19,51 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
   
   const handleFinalSubmit = (e) => {
     e.preventDefault();
-    console.log("handleFinalSubmit called");
-    console.log("onAddJob:", onAddJob);
-    onAddJob({ id: Date.now(), title: jobTitle, description: jobDescription, keywords });
+    onAddJob({ 
+      id: Date.now(), 
+      title: jobTitle, 
+      description: jobDescription, 
+      keywords 
+    });
     onClose();
     // Reset form fields
     setJobTitle('');
     setJobDescription('');
-    setKeywords([
-      { text: "React", important: false },
-      { text: "Node.js", important: false },
-      { text: "JavaScript", important: false }
-    ]);
+    setKeywords({
+      all: ["React", "Node.js", "JavaScript"],
+      important: []
+    });
     setIsAdvancedOptionsVisible(false);
   };
-  
 
   const handleAddKeyword = () => {
     if (newKeyword) {
-      setKeywords((prevKeywords) => [...prevKeywords, { text: newKeyword, important: false }]);
+      setKeywords((prevKeywords) => ({
+        ...prevKeywords,
+        all: [...prevKeywords.all, newKeyword]
+      }));
       setNewKeyword('');
     }
   };
 
   const handleRemoveKeyword = (keywordToRemove) => {
-    setKeywords((prevKeywords) => prevKeywords.filter(keyword => keyword.text !== keywordToRemove));
+    setKeywords((prevKeywords) => ({
+      all: prevKeywords.all.filter(keyword => keyword !== keywordToRemove),
+      important: prevKeywords.important.filter(keyword => keyword !== keywordToRemove)
+    }));
   };
 
   const toggleImportant = (keywordText) => {
     setKeywords((prevKeywords) => {
-      const updatedKeywords = prevKeywords.map((keyword) => {
-        if (keyword.text === keywordText) {
-          return { ...keyword, important: !keyword.important };
-        }
-        return keyword;
-      });
-      return updatedKeywords.sort((a, b) => b.important - a.important);
+      const isImportant = prevKeywords.important.includes(keywordText);
+      const updatedImportant = isImportant
+        ? prevKeywords.important.filter(keyword => keyword !== keywordText)
+        : [...prevKeywords.important, keywordText];
+      
+      return {
+        ...prevKeywords,
+        important: updatedImportant
+      };
     });
   };
 
@@ -80,7 +87,6 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
             rows="4"
           />
 
-          {/* Toggle buttons based on the step */}
           {!isAdvancedOptionsVisible ? (
             <button type="submit">Show Advanced Options</button>
           ) : (
@@ -90,7 +96,6 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
           <button type="button" onClick={onClose}>Cancel</button>
         </form>
 
-        {/* Advanced Options - Keyword Management */}
         {isAdvancedOptionsVisible && (
           <div className="advanced-options">
             <h3>Advanced Options</h3>
@@ -106,16 +111,16 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
             </div>
             <p>Manage generated keywords:</p>
             <div className="keyword-list">
-              {keywords.map((keyword) => (
-                <div key={keyword.text} className="keyword-item">
+              {keywords.all.map((keyword) => (
+                <div key={keyword} className="keyword-item">
                   <span 
-                    className={`star-icon ${keyword.important ? 'filled' : ''}`} 
-                    onClick={() => toggleImportant(keyword.text)}
+                    className={`star-icon ${keywords.important.includes(keyword) ? 'filled' : ''}`} 
+                    onClick={() => toggleImportant(keyword)}
                   >
-                    {keyword.important ? '★' : '☆'}
+                    {keywords.important.includes(keyword) ? '★' : '☆'}
                   </span>
-                  <span>{keyword.text}</span>
-                  <button className="remove-keyword" onClick={() => handleRemoveKeyword(keyword.text)}>×</button>
+                  <span>{keyword}</span>
+                  <button className="remove-keyword" onClick={() => handleRemoveKeyword(keyword)}>×</button>
                 </div>
               ))}
             </div>

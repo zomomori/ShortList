@@ -36,14 +36,17 @@ const Dashboard = () => {
   const handleAddJob = (newJob) => {
     setJobList((prevJobs) => [...prevJobs, newJob]);
     console.log('Adding new job:', newJob);
+    // api call here to update json
   };
 
   const handleFilter = (keyword) => {
     console.log('Filtering profiles by keyword:', keyword);
+    // add api call for filtering here
   };
 
   const handleSort = (criteria) => {
     console.log('Sorting by:', criteria);
+    // add api call for sorting here
   };
 
   return (

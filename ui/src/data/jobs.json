@@ -3,18 +3,27 @@
     "id": 1,
     "title": "Software Engineer",
     "description": "Responsible for designing, implementing, and maintaining software applications. Collaborates with cross-functional teams to define, develop, and test new features, ensuring high performance and responsiveness.",
-    "keywords": ["software development", "programming", "cross-functional", "performance", "testing"]
+    "keywords": {
+      "all": ["software development", "programming", "cross-functional", "performance", "testing"],
+      "important": ["cross-functional", "testing"]
+    }
   },
   {
     "id": 2,
     "title": "Data Scientist",
     "description": "Analyzes complex datasets to extract insights and build predictive models. Works closely with business teams to inform strategic decisions and optimize processes through data-driven approaches.",
-    "keywords": ["data analysis", "predictive modeling", "machine learning", "data-driven", "strategic insights"]
+    "keywords": {
+      "all": ["data analysis", "predictive modeling", "machine learning", "data-driven", "strategic insights"],
+      "important": ["predictive modeling", "data-driven"]
+    }
   },
   {
     "id": 3,
     "title": "Product Manager",
     "description": "Oversees product lifecycle from conception to launch. Works with engineering, design, and marketing teams to deliver a product that meets market demands and aligns with business goals.",
-    "keywords": ["product lifecycle", "project management", "market demands", "business goals", "cross-functional collaboration"]
+    "keywords": {
+      "all": ["product lifecycle", "project management", "market demands", "business goals", "cross-functional collaboration"],
+      "important": ["product lifecycle", "market demands"]
+    }
   }
 ]
