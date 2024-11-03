@@ -1,69 +1,59 @@
+// AddJobPopup.js
 import React, { useState } from 'react';
+import { getJobDescKeywords, getResumeSummary } from './backend/backendAPI';
 
 const AddJobPopup = ({ onClose, onAddJob }) => {
   const [jobTitle, setJobTitle] = useState('');
   const [jobDescription, setJobDescription] = useState('');
-  const [keywords, setKeywords] = useState({
-    all: ["React", "Node.js", "JavaScript"],
-    important: []
-  });
+  const [keywords, setKeywords] = useState([]); // Keywords now contain an object for importance
   const [newKeyword, setNewKeyword] = useState('');
   const [isAdvancedOptionsVisible, setIsAdvancedOptionsVisible] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (jobTitle && jobDescription) {
-      setIsAdvancedOptionsVisible(true);
+      if (!isAdvancedOptionsVisible) {
+        getJobDescKeywords(jobTitle + ' \n' + jobDescription)
+          .then(rr => {
+            const parsedKeywords = [...new Set(rr.split(',').map(keyword => keyword.trim()))].map(keyword => ({
+                text: keyword,
+                important: false 
+            }));          
+            setKeywords(parsedKeywords);
+            setIsAdvancedOptionsVisible(true);
+        })
+      } else {
+        onAddJob({ id: Date.now(), title: jobTitle, description: jobDescription });
+        console.log('Adding job:', { title: jobTitle, description: jobDescription, keywords });
+        onClose();
+        setJobTitle('');
+        setJobDescription('');
+        setIsAdvancedOptionsVisible(false);
+      }
     }
-  };
-  
-  const handleFinalSubmit = (e) => {
-    e.preventDefault();
-    onAddJob({ 
-      id: Date.now(), 
-      title: jobTitle, 
-      description: jobDescription, 
-      keywords 
-    });
-    onClose();
-    // Reset form fields
-    setJobTitle('');
-    setJobDescription('');
-    setKeywords({
-      all: ["React", "Node.js", "JavaScript"],
-      important: []
-    });
-    setIsAdvancedOptionsVisible(false);
   };
 
   const handleAddKeyword = () => {
     if (newKeyword) {
-      setKeywords((prevKeywords) => ({
-        ...prevKeywords,
-        all: [...prevKeywords.all, newKeyword]
-      }));
+      setKeywords((prevKeywords) => [...prevKeywords, { text: newKeyword, important: false }]);
       setNewKeyword('');
     }
   };
 
   const handleRemoveKeyword = (keywordToRemove) => {
-    setKeywords((prevKeywords) => ({
-      all: prevKeywords.all.filter(keyword => keyword !== keywordToRemove),
-      important: prevKeywords.important.filter(keyword => keyword !== keywordToRemove)
-    }));
+    setKeywords((prevKeywords) => prevKeywords.filter(keyword => keyword.text !== keywordToRemove));
   };
 
   const toggleImportant = (keywordText) => {
     setKeywords((prevKeywords) => {
-      const isImportant = prevKeywords.important.includes(keywordText);
-      const updatedImportant = isImportant
-        ? prevKeywords.important.filter(keyword => keyword !== keywordText)
-        : [...prevKeywords.important, keywordText];
-      
-      return {
-        ...prevKeywords,
-        important: updatedImportant
-      };
+      const updatedKeywords = prevKeywords.map((keyword) => {
+        if (keyword.text === keywordText) {
+          return { ...keyword, important: !keyword.important };
+        }
+        return keyword;
+      });
+      // Sort keywords, moving important ones to the top
+      return updatedKeywords.sort((a, b) => b.important - a.important);
     });
   };
 
@@ -71,7 +61,7 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
     <div className="popup-overlay">
       <div className="popup large-popup">
         <h2>Add Job Listing</h2>
-        <form onSubmit={isAdvancedOptionsVisible ? handleFinalSubmit : handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <input 
             type="text" 
             value={jobTitle} 
@@ -86,16 +76,11 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
             required 
             rows="4"
           />
-
-          {!isAdvancedOptionsVisible ? (
-            <button type="submit">Show Advanced Options</button>
-          ) : (
-            <button type="submit">Add Job</button>
-          )}
-
+          <button type="submit">Add Job</button>
           <button type="button" onClick={onClose}>Cancel</button>
         </form>
 
+        {/* Advanced Options - Keyword Management */}
         {isAdvancedOptionsVisible && (
           <div className="advanced-options">
             <h3>Advanced Options</h3>
@@ -111,16 +96,16 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
             </div>
             <p>Manage generated keywords:</p>
             <div className="keyword-list">
-              {keywords.all.map((keyword) => (
-                <div key={keyword} className="keyword-item">
+              {keywords.map((keyword, index) => (
+                <div key={index} className="keyword-item">
                   <span 
-                    className={`star-icon ${keywords.important.includes(keyword) ? 'filled' : ''}`} 
-                    onClick={() => toggleImportant(keyword)}
+                    className={`star-icon ${keyword.important ? 'filled' : ''}`} 
+                    onClick={() => toggleImportant(keyword.text)}
                   >
-                    {keywords.important.includes(keyword) ? '★' : '☆'}
+                    {keyword.important ? '★' : '☆'} {/* Filled star if important */}
                   </span>
-                  <span>{keyword}</span>
-                  <button className="remove-keyword" onClick={() => handleRemoveKeyword(keyword)}>×</button>
+                  <span>{keyword.text}</span>
+                  <button className="remove-keyword" onClick={() => handleRemoveKeyword(keyword.text)}>×</button>
                 </div>
               ))}
             </div>

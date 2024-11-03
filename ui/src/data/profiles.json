@@ -2,33 +2,25 @@
   {
     "id": 1,
     "jobId": 1,
-    "name": "John Doe",
-    "summary": "Experienced in React and Node.js",
+    "name": "Momo Gupta",
+    "summary": "",
     "details": "5 years in web development with a focus on front-end technologies. Proficient in React, Node.js, and RESTful APIs.",
-    "keywords": ["React", "Node.js", "JavaScript", "RESTful APIs", "web development"]
+    "keywords": []
   },
   {
     "id": 2,
     "jobId": 1,
-    "name": "Jane Smith",
-    "summary": "Full-stack developer with expertise in Python and ML",
+    "name": "Malini Kar",
+    "summary": "",
     "details": "Over 4 years of experience in full-stack development and machine learning, particularly in NLP projects.",
-    "keywords": ["Python", "machine learning", "full-stack development", "NLP", "data science"]
+    "keywords": []
   },
   {
     "id": 3,
     "jobId": 2,
-    "name": "Alice Johnson",
-    "summary": "Data Analyst with strong SQL skills",
+    "name": "Priyesh",
+    "summary": "",
     "details": "3 years in data analysis, specializing in data visualization and SQL-based analytics.",
-    "keywords": ["SQL", "data analysis", "data visualization", "analytics", "tableau"]
-  },
-  {
-    "id": 4,
-    "jobId": 3,
-    "name": "Bob Brown",
-    "summary": "Product Manager with agile experience",
-    "details": "4 years in product management, skilled in agile methodologies and cross-functional team leadership.",
-    "keywords": ["product management", "agile methodologies", "team leadership", "project planning", "cross-functional collaboration"]
+    "keywords": []
   }
 ]
