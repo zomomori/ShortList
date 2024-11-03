@@ -1,0 +1,31 @@
+[
+    {
+      "id": 1,
+      "jobId": 1,
+      "name": "John Doe",
+      "summary": "Experienced in React and Node.js",
+      "details": "5 years in web development with a focus on front-end technologies. Proficient in React, Node.js, and RESTful APIs."
+    },
+    {
+      "id": 2,
+      "jobId": 1,
+      "name": "Jane Smith",
+      "summary": "Full-stack developer with expertise in Python and ML",
+      "details": "Over 4 years of experience in full-stack development and machine learning, particularly in NLP projects."
+    },
+    {
+      "id": 3,
+      "jobId": 2,
+      "name": "Alice Johnson",
+      "summary": "Data Analyst with strong SQL skills",
+      "details": "3 years in data analysis, specializing in data visualization and SQL-based analytics."
+    },
+    {
+      "id": 4,
+      "jobId": 3,
+      "name": "Bob Brown",
+      "summary": "Product Manager with agile experience",
+      "details": "4 years in product management, skilled in agile methodologies and cross-functional team leadership."
+    }
+  ]
+  
