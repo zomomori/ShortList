@@ -25,27 +25,28 @@ const getJobDescKeywords = async (jobDesc) => {
     }),
   });
 
-  const data = await response.json();;
+  const data = await response.json();
   return(data.response);
 };
 
-const getResumeSummary = async (file) => {
-  const formData = new FormData();
-  formData.append('document1', file);
-
+const getResumeSummary = async (filePath) => {
   const response = await fetch('http://localhost:3001/get-resume-summary', {
     method: 'POST',
-    body: formData, 
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      text1: filePath
+    }),
   });
 
   const data = await response.json();
-  alert(data.response);
   return data.response;
 };
 
 
 const getResumeKeywords = async (resumeFile, jobDesc) => {
-  const response = await fetch('http://localhost:3001/get-resume-summary', {
+  const response = await fetch('http://localhost:3001/get-resume-keywords', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -56,8 +57,7 @@ const getResumeKeywords = async (resumeFile, jobDesc) => {
   });
 
   const data = await response.json();
-  alert(data.response);
   return(data.response);
 };
 
-export default getJobDescKeywords;
+export { getJobDescKeywords, getResumeSummary };

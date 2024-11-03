@@ -7,6 +7,7 @@ import SortFilterPanel from './SortFilterPanel';
 import AddJobPopup from './AddJobPopup';
 import jobsData from '../data/jobs.json'; // Ensure this path is correct
 import profilesData from '../data/profiles.json'; // Ensure this path is correct
+import { getResumeSummary } from './backend/backendAPI';
 
 const Dashboard = () => {
   const [selectedJob, setSelectedJob] = useState(null);
@@ -17,9 +18,54 @@ const Dashboard = () => {
   const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
-    setJobList(jobsData);
-    setProfiles(profilesData);
+    const initializeData = async () => {
+      setJobList(jobsData);
+      const updatedProfiles = await updateProfilesWithSummaries(profilesData);
+      setProfiles(updatedProfiles);
+    };
+
+    initializeData();
   }, []);
+
+  const updateProfilesWithSummaries = async (profiles) => {
+    const updatedProfiles = await Promise.all(
+      profiles.map(async (profile) => {
+        if (!profile.summary) {
+          const resumePath = "C:/Users/momo/Documents/GitHub/ShortList/ui/src/data/resume/Resume_" + profile.id + ".pdf";
+          alert(`Fetching summary for: ${resumePath}`); // More context for debugging
+          
+          let summary;
+          try {
+            summary = await getResumeSummary(resumePath);
+            console.log('Fetched summary:', summary); // Log fetched summary
+          } catch (error) {
+            console.error('Error fetching summary:', error); // Log error if it occurs
+            summary = 'Invalid.';
+          } finally {
+            return { ...profile, summary };
+          }
+        }
+        return profile; 
+      })
+    );
+  
+    // Log updated profiles before sending to server
+    console.log('Updated profiles:', updatedProfiles);
+  
+    await updateProfilesJson(updatedProfiles);
+    return updatedProfiles;
+  };  
+
+  const updateProfilesJson = async (profiles) => {
+    // Example API call to update the profiles JSON file
+    await fetch('http://localhost:3001/update-profiles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(profiles),
+    });
+  };
 
   const filteredProfiles = selectedJob 
     ? profiles.filter((profile) => profile.jobId === selectedJob.id) 
