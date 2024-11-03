@@ -108,6 +108,52 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+}
+.popup.large-popup {
+  width: 500px; /* Increased width */
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.advanced-options {
+  margin-top: 20px;
+  margin-inline: 10px;
+}
+
+.keyword-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.keyword-input {
+  display: flex;
+  gap: 8px; /* Space between input and button */
+  margin-bottom: 12px; /* Space below the input section */
+}
+
+.star-icon {
+  cursor: pointer; /* Change cursor to pointer for the star icon */
+  margin-right: 8px; /* Space between star and keyword text */
+  color: gold; /* Color of the star */
+}
+
+.keyword-item {
+  display: flex;
+  align-items: center;
+  margin: 4px 0; /* Space between keyword items */
+  padding: 4px; /* Padding around each keyword */
+  border: 1px solid #ccc; /* Border around keywords */
+  border-radius: 12px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.remove-keyword, .important-keyword {
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
 .popup {
@@ -151,14 +197,24 @@ code {
   background-color: #ccc;
 }
 
-.popup input[type="text"] {
-  margin: 10px; 
+.popup textarea{
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .popup h2 {
   text-align: center;
 }
 
+.keyword-input input{
+  margin-bottom: 0;
+}
+
+.keyword-input button{
+  margin: 0;
+}
 /* CARD TOGGLE */
 
 .view-toggle {
@@ -187,20 +243,86 @@ code {
 }
 
 .profile-item, .profile-card {
-  border: 1px solid #ddd;
   padding: 10px;
   margin: 5px;
   cursor: pointer;
 }
 
-.profile-detail {
-  padding: 20px;
+/* CARD VIEW */
+
+.profile-card-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: left;
+}
+
+.profile-card {
+  width: 30%; /* Allows three cards per row */
+  height: 200px;
+  perspective: 1000px; /* Enables 3D perspective */
+  cursor: pointer;
+  
+}
+
+.profile-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+  border-radius: 10px;
   border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.card-front {
+  background-color: #fff;
+  color: #333;
+}
+
+.card-back {
+  background-color: #f7f7f7;
+  color: #555;
+  transform: rotateY(180deg); /* Position back side */
+}
+
+.card-back button {
+  background-color: #da8dae;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 0.9em;
+  transition: background-color 0.3s;
+}
+
+.card-back button:hover {
+  background-color: #993a58;
 }
 
 /* LIST VIEW */
 
-/* styles.css */
 .profile-list-view {
   width: 100%; /* Full width of the container */
   overflow-x: auto; /* Enable horizontal scrolling on smaller screens */
@@ -218,7 +340,7 @@ th, td {
 }
 
 th {
-  background-color: #f4f4f4; /* Light background for header */
+  background-color: #f4ebf7; /* Light background for header */
 }
 
 .summary-cell {
