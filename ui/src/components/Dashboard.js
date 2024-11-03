@@ -5,8 +5,8 @@ import ProfileCardView from './ProfileCardView';
 import ProfileDetail from './ProfileDetails';
 import SortFilterPanel from './SortFilterPanel';
 import AddJobPopup from './AddJobPopup';
-import jobsData from '../data/jobs.json'; // Adjust path accordingly
-import profilesData from '../data/profiles.json'; // Adjust path accordingly
+import jobsData from '../data/jobs.json'; // Ensure this path is correct
+import profilesData from '../data/profiles.json'; // Ensure this path is correct
 
 const Dashboard = () => {
   const [selectedJob, setSelectedJob] = useState(null);
@@ -17,43 +17,63 @@ const Dashboard = () => {
   const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
-    // Load jobs and profiles from JSON
     setJobList(jobsData);
     setProfiles(profilesData);
   }, []);
 
-  const filteredProfiles = profiles.filter((profile) => profile.jobId === selectedJob);
+  const filteredProfiles = selectedJob 
+    ? profiles.filter((profile) => profile.jobId === selectedJob.id) 
+    : profiles; // Only filter when a job is selected
 
   const handleToggleView = () => {
     setViewMode((prevMode) => (prevMode === 'list' ? 'card' : 'list'));
   };
 
   const togglePopup = () => {
-    setIsPopupOpen((prev) => !prev);
+    setIsPopupOpen(!isPopupOpen);
   };
 
   const handleAddJob = (newJob) => {
     setJobList((prevJobs) => [...prevJobs, newJob]);
   };
 
+  const handleFilter = (keyword) => {
+    console.log('Filtering profiles by keyword:', keyword);
+  };
+
+  const handleSort = (criteria) => {
+    console.log('Sorting by:', criteria);
+  };
+
   return (
     <div className="dashboard">
-      <JobPanel jobs={jobList} onJobSelect={setSelectedJob} onAddJob={handleAddJob} />
+      <JobPanel jobs={jobList} onJobSelect={setSelectedJob} onAddJob={togglePopup} />
       <div className={`main-content ${isPopupOpen ? 'blur' : ''}`}>
-        <SortFilterPanel onSort={() => {}} onFilter={() => {}} />
+        <SortFilterPanel 
+          selectedJob={selectedJob} 
+          profiles={profiles} 
+          onFilter={handleFilter} 
+          onSort={handleSort} 
+        />
         <div className="view-toggle">
           <button onClick={handleToggleView} className="toggle-button">
             Switch to {viewMode === 'list' ? 'Card View' : 'List View'}
           </button>
         </div>
-        {selectedProfile ? (
-          <ProfileDetail profile={selectedProfile} />
-        ) : (
-          viewMode === 'list' ? (
-            <ProfileListView profiles={filteredProfiles} onViewProfile={setSelectedProfile} />
+        {selectedJob ? (
+          selectedProfile ? (
+            <ProfileDetail profile={selectedProfile} />
           ) : (
-            <ProfileCardView profiles={filteredProfiles} onViewProfile={setSelectedProfile} />
+            viewMode === 'list' ? (
+              <ProfileListView profiles={filteredProfiles} onViewProfile={setSelectedProfile} />
+            ) : (
+              <ProfileCardView profiles={filteredProfiles} onViewProfile={setSelectedProfile} />
+            )
           )
+        ) : (
+          <div className="no-job-selected">
+            <h2>Select a job to view candidates.</h2>
+          </div>
         )}
       </div>
       {isPopupOpen && (

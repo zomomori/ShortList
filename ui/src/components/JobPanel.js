@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import AddJobPopup from './AddJobPopup';
 
 const JobPanel = ({ jobs, onJobSelect, onAddJob }) => {
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [selectedJobId, setSelectedJobId] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const handleJobClick = (jobId) => {
-    setSelectedJob(jobId);
-    onJobSelect(jobId);
+  const handleJobClick = (job) => {
+    setSelectedJobId(job.id);
+    onJobSelect(job); // Pass the whole job object
   };
 
   const togglePopup = () => {
@@ -23,8 +23,8 @@ const JobPanel = ({ jobs, onJobSelect, onAddJob }) => {
       {jobs.map((job) => (
         <div 
           key={job.id} 
-          onClick={() => handleJobClick(job.id)} 
-          className={`job-item ${selectedJob === job.id ? 'selected' : ''}`}
+          onClick={() => handleJobClick(job)} // Pass the job object
+          className={`job-item ${selectedJobId === job.id ? 'selected' : ''}`}
         >
           <div className="job-title">{job.title}</div>
           <div className="view-candidates">
