@@ -35,6 +35,7 @@ const Dashboard = () => {
 
   const handleAddJob = (newJob) => {
     setJobList((prevJobs) => [...prevJobs, newJob]);
+    console.log('Adding new job:', newJob);
   };
 
   const handleFilter = (keyword) => {

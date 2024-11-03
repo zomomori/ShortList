@@ -19,6 +19,7 @@ const AddJobPopup = ({ onClose, onAddJob }) => {
         setIsAdvancedOptionsVisible(true);
       } else {
         onAddJob({ id: Date.now(), title: jobTitle, description: jobDescription });
+        console.log('Adding job:', { title: jobTitle, description: jobDescription, keywords });
         onClose();
         setJobTitle('');
         setJobDescription('');
