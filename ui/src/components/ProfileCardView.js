@@ -17,12 +17,23 @@ const ProfileCardView = ({ profiles, onViewProfile }) => {
         >
           <div className="card-inner">
             <div className="card-front">
-              <h3>{profile.name}</h3>
-              <p>{profile.summary}</p>
+              <div className="pastel-block">
+                <h3>{profile.name}</h3>
+                <p>{profile.details}</p>
+              </div>
+              <div className="tags">
+                {profile.keywords.slice(0, 5).map((keyword, index) => (
+                  <span key={index} className="tag">
+                    <i className="tag-icon">🏷️</i> {keyword}
+                  </span>
+                ))}
+              </div>
             </div>
             <div className="card-back">
-              <p>{profile.details}</p>
-              <button onClick={() => onViewProfile(profile.id)}>View More</button>
+              <div className="full-span-pastel">
+                <p>{profile.summary}</p>
+                <button onClick={() => onViewProfile(profile.id)}>View More</button>
+              </div>
             </div>
           </div>
         </div>

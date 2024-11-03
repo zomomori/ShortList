@@ -305,7 +305,7 @@ code {
 
 .profile-card {
   width: 30%; /* Allows three cards per row */
-  height: 200px;
+  height: 400px;
   perspective: 1000px; /* Enables 3D perspective */
   cursor: pointer;
   
@@ -367,6 +367,31 @@ code {
   background-color: #993a58;
 }
 
+.tag{
+  background-color: #f4ebf7;
+  color: #c083d7;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 2px;
+}
+
+.tag:hover{
+  background-color: #c083d7;
+  color: #f4ebf7;
+}
+.tags{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 8px 0;
+}
+
+.pastel-block{
+  flex-grow: 1;
+  background-color: #f4ebf7;
+  border-radius: 5px;
+  padding: 12px;
+}
 /* LIST VIEW */
 
 .profile-list-view {
