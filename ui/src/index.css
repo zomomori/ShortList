@@ -111,7 +111,7 @@ code {
   z-index: 1000;
 }
 .popup.large-popup {
-  width: 500px; /* Increased width */
+  width: 1000px; /* Increased width */
   padding: 20px;
   background: #fff;
   border-radius: 8px;

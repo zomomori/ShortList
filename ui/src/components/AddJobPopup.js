@@ -1,19 +1,34 @@
 import React, { useState } from 'react';
+import getJobDescKeywords from './backend/backendAPI';
 
 const AddJobPopup = ({ onClose, onAddJob }) => {
   const [jobTitle, setJobTitle] = useState('');
   const [jobDescription, setJobDescription] = useState('');
-  const [keywords, setKeywords] = useState({
-    all: ["React", "Node.js", "JavaScript"],
-    important: []
-  });
+  const [keywords, setKeywords] = useState([]); // Keywords now contain an object for importance
   const [newKeyword, setNewKeyword] = useState('');
   const [isAdvancedOptionsVisible, setIsAdvancedOptionsVisible] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (jobTitle && jobDescription) {
-      setIsAdvancedOptionsVisible(true);
+      if (!isAdvancedOptionsVisible) {
+        getJobDescKeywords(jobTitle + ' \n' + jobDescription)
+          .then(rr => {
+            const parsedKeywords = [...new Set(rr.split(',').map(keyword => keyword.trim()))].map(keyword => ({
+                text: keyword,
+                important: false 
+            }));          
+            setKeywords(parsedKeywords);
+            setIsAdvancedOptionsVisible(true);
+        })
+      } else {
+        onAddJob({ id: Date.now(), title: jobTitle, description: jobDescription });
+        console.log('Adding job:', { title: jobTitle, description: jobDescription, keywords });
+        onClose();
+        setJobTitle('');
+        setJobDescription('');
+        setIsAdvancedOptionsVisible(false);
+      }
     }
   };
   
